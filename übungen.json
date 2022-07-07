@@ -7,66 +7,131 @@
     "Langhantel Bankdrücken (positiv)": {
         "Musekelgruppe": "Brust",
         "Typ": "Obere Brust",
-        "Hilfsmittel": "Langhantel, Schrägbank"
+        "Equipment": "Langhantel, Schrägbank"
     },
     "Langhantel Bankdrücken (negativ)": {
         "Musekelgruppe": "Brust",
         "Typ": "Untere Brust",
-        "Hilfsmittel": "Langhantel, Schrägbank"
+        "Equipment": "Langhantel, Schrägbank"
     },
     "Brustpresse": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "Gerät"
+        "Equipment": "Gerät"
     },
     "Butterfly": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "Gerät"
+        "Equipment": "Gerät"
     },
     "Kabel Crossover": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "Kabelzug"
+        "Equipment": "Kabelzug"
     },
     "Liegestützen": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "keine"
+        "Equipment": "keine"
     },
     "Liegestützen mit Erhöung (positiv)": {
         "Musekelgruppe": "Brust",
         "Typ": "Obere Brust",
-        "Hilfsmittel": "Erhöhung"
+        "Equipment": "Erhöhung"
     },
     "Liegestützen mit Erhöung (negativ)": {
         "Musekelgruppe": "Brust",
         "Typ": "Untere Brust",
-        "Hilfsmittel": "Erhöhung"
+        "Equipment": "Erhöhung"
     },
     "Breite Liegestützen": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "keine"
+        "Equipment": "keine"
     },
     "Kurzhantel Bankdrücken": {
         "Musekelgruppe": "Brust",
         "Typ": "Mittlere Brust",
-        "Hilfsmittel": "Langhantel, Flachbank"
+        "Equipment": "Kurzhanteln, Flachbank"
     },
     "Kurzhantel Bankdrücken (positiv)": {
         "Musekelgruppe": "Brust",
         "Typ": "Obere Brust",
-        "Hilfsmittel": "Langhantel, Schrägbank"
+        "Equipment": "Kurzhanteln, Schrägbank"
     },
     "Kurzhantel Bankdrücken (negativ)": {
         "Musekelgruppe": "Brust",
         "Typ": "Untere Brust",
-        "Hilfsmittel": "Langhantel, Schrägbank"
+        "Equipment": "Kurzhanteln, Schrägbank"
     },
     "Kurzhantel Überzug": {
         "Musekelgruppe": "Brust",
         "Typ": "Obere Brust",
-        "Hilfsmittel": "Langhantel, Flachbank"
+        "Equipment": "Kurzhantel, Flachbank"
+    },
+    "Latziehen mit breitem Griff": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus",
+        "Equipment": "Latzugturm"
+    },
+    "Latziehen mit engem Griff": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Trapezmusekl",
+        "Equipment": "Latzugturm"
+    },
+    "Rückenstrecken": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Rückenstrecker",
+        "Equipment": "Rückenstreckermaschine"
+    },
+    "Hyperextensions": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Rückenstrecker",
+        "Equipment": "Hyperextensionsbank"
+    },
+    "Kurzhantel rumänisches Kreuzheben": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Rückenstrecker",
+        "Equipment": "Kurzhanteln"
+    },
+    "Kurzhantel gestrecktes Kreuzheben": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Rückenstrecker",
+        "Equipment": "Kurzhanteln"
+    },
+    "Rumänisches Kreuzheben": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Rückenstrecker",
+        "Equipment": "Langhantel"
+    },
+    "Rudern am Gerät": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Rautenmuskel",
+        "Equipment": "Gerät"
+    },
+    "Kurzhantel Rudern auf Schrägbank": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Rautenmuskel, Trapetzmuskel",
+        "Equipment": "Kurzhanteln, Schrägbank"
+    },
+    "Rudern am Kabelzug": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Rautenmuskel, Trapetzmuskel",
+        "Equipment": "Kabelzug"
+    },
+    "T-Bar Rudern": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Trapetzmuskel",
+        "Equipment": "Kabelzug"
+    },
+    "Langhantel Rudern": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Latissimus, Trapetzmuskel",
+        "Equipment": "Langhantel"
+    },
+    "Klimmzüge": {
+        "Musekelgruppe": "Rücken",
+        "Typ": "Ganzer Rücken",
+        "Equipment": "Klimmzugstange"
     },
 }
