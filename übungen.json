@@ -1,0 +1,72 @@
+{
+    "Langhantel Bankdrücken": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Equipment": "Langhantel, Flachbank"
+    },
+    "Langhantel Bankdrücken (positiv)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Obere Brust",
+        "Hilfsmittel": "Langhantel, Schrägbank"
+    },
+    "Langhantel Bankdrücken (negativ)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Untere Brust",
+        "Hilfsmittel": "Langhantel, Schrägbank"
+    },
+    "Brustpresse": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "Gerät"
+    },
+    "Butterfly": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "Gerät"
+    },
+    "Kabel Crossover": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "Kabelzug"
+    },
+    "Liegestützen": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "keine"
+    },
+    "Liegestützen mit Erhöung (positiv)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Obere Brust",
+        "Hilfsmittel": "Erhöhung"
+    },
+    "Liegestützen mit Erhöung (negativ)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Untere Brust",
+        "Hilfsmittel": "Erhöhung"
+    },
+    "Breite Liegestützen": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "keine"
+    },
+    "Kurzhantel Bankdrücken": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Mittlere Brust",
+        "Hilfsmittel": "Langhantel, Flachbank"
+    },
+    "Kurzhantel Bankdrücken (positiv)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Obere Brust",
+        "Hilfsmittel": "Langhantel, Schrägbank"
+    },
+    "Kurzhantel Bankdrücken (negativ)": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Untere Brust",
+        "Hilfsmittel": "Langhantel, Schrägbank"
+    },
+    "Kurzhantel Überzug": {
+        "Musekelgruppe": "Brust",
+        "Typ": "Obere Brust",
+        "Hilfsmittel": "Langhantel, Flachbank"
+    },
+}
