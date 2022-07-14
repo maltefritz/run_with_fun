@@ -43,14 +43,17 @@ if app == 'Fitnessplan':
     i = 0
     while i < nos:
         with st.expander(f'Trainingseinheit {i+1}', expanded=False):
-            st.text_input('Name der Trainingseinheit', key=f'Name {i}')
+            st.text_input('Name der Trainingseinheit', key=f'name{i}')
             st.write('Wähle deine Übungen aus')
 
             j = 0
             while j < noe:
+                muscle = st.multiselect(
+                    'Wähle die Muskelgruppe(n) aus, die du trainieren willst',
+                    ['Brust', 'Rücken'], key=f'muscle{j}'
+                    )
                 units = st.selectbox(
-                    f'Übung {j+1}', exercises.keys(),
-                    index=len(exercises.keys())-1, key=f'exercises {i}{j}'
+                    f'Übung {j+1}', exercises.keys(), key=f'exercises{i}{j}'
                     )
                 j = j + 1
 
