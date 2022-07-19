@@ -8,6 +8,7 @@ Created on Fri Jul  8 09:11:32 2022
 import streamlit as st
 import json
 import pandas as pd
+import numpy as np
 import matplotlib.dates as dt
 
 # %% Initialisation
@@ -25,7 +26,7 @@ fp = dict()
 
 # %% Sidebar
 with st.sidebar:
-    st.image('src\\Logo.png')
+    st.image('src\\Logo.png', use_column_width='always')
 
     app = st.selectbox(
         'Wähle deine Anwendung aus',
@@ -73,7 +74,7 @@ if app == 'Laufanalyse':
         col1, col2 = st.columns(2)
         with col1:
             dis = st.number_input(
-                'Distanz', min_value=0, step=1, key=f'dis')
+                'Distanz', min_value=0, step=1, value=1, key=f'dis')
         with col2:
             unit = st.selectbox('Einheit', ['km', 'm'])
 
@@ -89,7 +90,8 @@ if app == 'Laufanalyse':
                 )
         with col5:
             sec = st.number_input(
-                'Sekunden', min_value=0, max_value=60, step=1, key=f'sec'
+                'Sekunden', min_value=0, max_value=60, step=1, value=1,
+                key=f'sec'
                 )
 
         col6, col7 = st.columns(2)
@@ -127,12 +129,16 @@ elif app == 'Fitnessplan':
 
             j = 0
             while j < noe:
-                muscle = st.multiselect(
-                    'Wähle die Muskelgruppe(n) aus, die du trainieren willst',
-                    ['Brust', 'Rücken'], key=f'muscle{i}{j}'
+                muscle = st.selectbox(
+                    'Wähle die Muskelgruppe aus, die du trainieren willst',
+                    set([ex['Muskelgruppe'] for ex in exercises.values()]),
+                    key=f'muscle{i}{j}'
                     )
+
                 fp['units'] = st.selectbox(
-                    f'Übung {j+1}', exercises.keys(), key=f'exercises{i}{j}'
+                    f'Übung {j+1}',
+                    [ex for ex in exercises if exercises[ex]['Muskelgruppe'] == muscle],
+                    key=f'exercises{i}{j}'
                     )
                 j = j + 1
 
