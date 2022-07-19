@@ -11,6 +11,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.dates as dt
 
+
+# @st.cache
+def get_data(file=''):
+    """Import data."""
+    return pd.read_excel(
+        file, index_col=0
+        )
+
+
 # %% Initialisation
 with open('src\\exercises.json', 'r') as file:
     exercises = json.load(file)
@@ -41,6 +50,7 @@ with st.sidebar:
             'Wie viele Übungen hat eine Trainingseinheit', 0, 10
             )
 
+# %% Laufanalyse
 if app == 'Laufanalyse':
     st.title('Statistik deiner zurückgelgeten Läufe')
 
@@ -49,24 +59,38 @@ if app == 'Laufanalyse':
         type='xlsx'
         )
 
-    with st.expander(f'Durchschnittliche Statistik', expanded=True):
-        st.write(
-            'Distanzen, Dauer, Anzahl Aktivitöten, Pace, Geschwindigkeiten',
-            key=f's1'
-            )
+    if user_file is None:
+        st.info('Bitte fügen Sie eine Datei ein.')
 
-    with st.expander(f'Alle Statistik', expanded=True):
-        st.write(
-            'Statistiken: kum. Distanzen(Links), kum. Dauer(Links), '
-            + 'Punkte/Balken: Pace(rechts), Geschwindigkeiten(rechts)',
-            key=f's2'
-            )
+    else:
+        df = get_data(user_file)
 
-    with st.expander(f'Rekorde', expanded=True):
-        st.write(
-            '3km, 5km, 10km, 21km, 42km',
-            key=f's3'
-            )
+        with st.expander(f'Durchschnittliche Statistik', expanded=True):
+            act_ave = len(df.columns)
+            dis_ave = df['distance'].sum()/len(df.columns)
+            rt_ave = df['run time'].sum()/len(df.columns)
+            pac_ave = df['pace'].sum()/len(df.columns)
+            spe_ave = df['speed'].sum()/len(df.columns)
+
+            st.write(f'Anzahl Aktivitäten: {act_ave}')
+            st.write(f'Durchschnittliche Distanz: {dis_ave:.2f} km')
+            st.write(f'Durchschnittliche Laufzeit: {rt_ave:.2f} min')
+            st.write(f'Durchschnittliches Tempo: {pac_ave:.2f} km')
+            st.write(f'Durchschnittliche Geschwindigkeit: {spe_ave:.2f} km')
+
+
+        with st.expander(f'Alle Statistik', expanded=True):
+            st.write(
+                'Statistiken: kum. Distanzen(Links), kum. Dauer(Links), '
+                + 'Punkte/Balken: Pace(rechts), Geschwindigkeiten(rechts)',
+                key=f's2'
+                )
+
+        with st.expander(f'Rekorde', expanded=True):
+            st.write(
+                '3km, 5km, 10km, 21km, 42km',
+                key=f's3'
+                )
 
     with st.expander(f'Laufzeitenrechner', expanded=True):
         st.write('Gebe deine Laufdaten ein:')
@@ -117,6 +141,9 @@ if app == 'Laufanalyse':
                 st.write(f'Pace:')
                 st.write(f'{pace:.2f} min/km')
 
+# %% Fitnessanalyse
+
+# %% Fitnessplan
 elif app == 'Fitnessplan':
     st.title('Erstelle einen Fitnessplan')
     i = 0
