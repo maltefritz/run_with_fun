@@ -75,9 +75,8 @@ if app == 'Laufanalyse':
             st.write(f'Anzahl Aktivitäten: {act_ave}')
             st.write(f'Durchschnittliche Distanz: {dis_ave:.2f} km')
             st.write(f'Durchschnittliche Laufzeit: {rt_ave:.2f} min')
-            st.write(f'Durchschnittliches Tempo: {pac_ave:.2f} km')
-            st.write(f'Durchschnittliche Geschwindigkeit: {spe_ave:.2f} km')
-
+            st.write(f'Durchschnittliches Tempo: {pac_ave:.2f} min/km')
+            st.write(f'Durchschnittliche Geschwindigkeit: {spe_ave:.2f} km/h')
 
         with st.expander(f'Alle Statistik', expanded=True):
             st.write(
