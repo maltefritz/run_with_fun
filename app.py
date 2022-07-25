@@ -76,21 +76,19 @@ if app == 'Laufanalyse':
                 )
 
         with st.expander(f'Alle Statistik', expanded=True):
-            # Zeitraum auswählbar machen
-            # 2 Spalten
-            # 2 kum Plots + 2 Balken
 
             period = st.date_input(
                 'Zeitraum auswählen:', value=(df.index[0], df.index[-1]),
                 min_value=df.index[0], max_value=df.index[-1]
                 )
 
-            tab1, tab2, tab3, tab4 = st.tabs(['dis', 'dau', 'Tem', 'Spe'])
+            tab1, tab2, tab3, tab4 = st.tabs(
+                ['Distanz', 'Laufzeit', 'Tempo', 'Geschwindigkeit']
+                )
+            # Plots für Distanzen
             with tab1:
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.subheader('Distanz')
-
                     fig1s, ax = plt.subplots(figsize=(16, 9))
                     ax.scatter(
                         df.index,
@@ -103,10 +101,7 @@ if app == 'Laufanalyse':
                     ax.grid(linestyle='--')
                     st.pyplot(fig1s)
 
-                    st.subheader('Dauer')
-
                 with col2:
-                    st.subheader('🛣️')
                     fig1b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
                         df.index, df.loc[period[0]:period[-1], 'distance'],
@@ -117,94 +112,92 @@ if app == 'Laufanalyse':
                     ax.grid(linestyle='--')
                     st.pyplot(fig1b)
 
-            #     fig2s, ax = plt.subplots(figsize=(16, 9))
-            #     ax.scatter(
-            #         df.index,
-            #         df.loc[period[0]:period[-1], 'run time'].cumsum(),
-            #         linewidths=10
-            #         )
-            #     ax.plot(df.loc[period[0]:period[-1], 'run time'].cumsum())
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel('kummlierte Stunden')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig2s)
+            # Plots für Laufzeiten
+            with tab2:
+                col1, col2 = st.columns(2)
+                with col1:
+                    fig2s, ax = plt.subplots(figsize=(16, 9))
+                    ax.scatter(
+                        df.index,
+                        df.loc[period[0]:period[-1], 'run time'].cumsum(),
+                        linewidths=10
+                        )
+                    ax.plot(df.loc[period[0]:period[-1], 'run time'].cumsum())
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('kummlierte Stunden')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig2s)
 
-            #     st.subheader('Tempo')
+                with col2:
+                    fig2b, ax = plt.subplots(figsize=(16, 9))
+                    ax.bar(
+                        df.index, df.loc[period[0]:period[-1], 'run time'],
+                        width=0.5
+                        )
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('Stunden')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig2b)
 
-            #     fig3s, ax = plt.subplots(figsize=(16, 9))
-            #     ax.scatter(
-            #         df.index,
-            #         df.loc[period[0]:period[-1], 'pace'], linewidths=10
-            #         )
-            #     ax.plot(df.loc[period[0]:period[-1], 'pace'])
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel('$min/km$')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig3s)
+            # Plots für Tempi
+            with tab3:
+                col1, col2 = st.columns(2)
+                with col1:
+                    fig3s, ax = plt.subplots(figsize=(16, 9))
+                    ax.scatter(
+                        df.index,
+                        df.loc[period[0]:period[-1], 'pace'], linewidths=10
+                        )
+                    ax.plot(df.loc[period[0]:period[-1], 'pace'])
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('$min/km')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig3s)
 
-            #     st.subheader('Geschwindigkeit')
+                with col2:
+                    fig3b, ax = plt.subplots(figsize=(16, 9))
+                    ax.bar(
+                        df.index, df.loc[period[0]:period[-1], 'pace'],
+                        width=0.5
+                        )
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('min/km')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig3b)
 
-            #     fig4s, ax = plt.subplots(figsize=(16, 9))
-            #     ax.scatter(
-            #         df.index,
-            #         df.loc[period[0]:period[-1], 'speed'], linewidths=10
-            #         )
-            #     ax.plot(df.loc[period[0]:period[-1], 'speed'])
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel('km/h')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig4s)
+            # Plots für Geschwindigkeiten
+            with tab4:
+                col1, col2 = st.columns(2)
+                with col1:
+                    fig4s, ax = plt.subplots(figsize=(16, 9))
+                    ax.scatter(
+                        df.index,
+                        df.loc[period[0]:period[-1], 'speed'], linewidths=10
+                        )
+                    ax.plot(df.loc[period[0]:period[-1], 'speed'])
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('km/h')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig4s)
 
-            # with col2:
-            #     st.subheader('🛣️')
-            #     fig1b, ax = plt.subplots(figsize=(16, 9))
-            #     ax.bar(
-            #         df.index, df.loc[period[0]:period[-1], 'distance'],
-            #         width=0.5
-            #         )
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel('km')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig1b)
+                with col2:
+                    fig4b, ax = plt.subplots(figsize=(16, 9))
+                    ax.bar(
+                        df.index, df.loc[period[0]:period[-1], 'speed'],
+                        width=0.5
+                        )
+                    ax.set_xlabel('Datum')
+                    ax.set_ylabel('km/h')
+                    ax.grid(linestyle='--')
+                    st.pyplot(fig4b)
 
-            #     st.subheader('⏱️')
-            #     fig2b, ax = plt.subplots(figsize=(16, 9))
-            #     ax.bar(
-            #         df.index, df.loc[period[0]:period[-1], 'run time'],
-            #         width=0.5
-            #         )
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel('Stunden')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig2b)
+            with st.expander(f'Rekorde', expanded=True):
+                st.write(
+                    '3km, 5km, 10km, 21km, 42km',
+                    key=f's3'
+                    )
 
-            #     st.subheader('🔥')
-            #     fig3b, ax = plt.subplots(figsize=(16, 9))
-            #     ax.bar(
-            #         df.index, df.loc[period[0]:period[-1], 'pace'], width=0.5
-            #         )
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel(r'$min/km$')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig3b)
-
-            #     st.subheader('🚀')
-            #     fig4b, ax = plt.subplots(figsize=(16, 9))
-            #     ax.bar(
-            #         df.index, df.loc[period[0]:period[-1], 'speed'], width=0.5
-            #         )
-            #     ax.set_xlabel('Datum')
-            #     ax.set_ylabel(r'$km/h$')
-            #     ax.grid(linestyle='--')
-            #     st.pyplot(fig4b)
-
-        with st.expander(f'Rekorde', expanded=True):
-            st.write(
-                '3km, 5km, 10km, 21km, 42km',
-                key=f's3'
-                )
-
-    with st.expander(f'Laufzeitenrechner', expanded=True):
+    with st.expander(f'Laufzeitenrechner', expanded=False):
         st.write('Gebe deine Laufdaten ein:')
 
         col1, col2 = st.columns(2)
