@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 # import matplotlib.dates as dt
-# from datetime import datetime, time, timedelta
+from datetime import datetime  # time, timedelta
 
 
 # @st.cache
@@ -60,14 +60,17 @@ if app == 'Laufanalyse':
     else:
         df = get_data(user_file)
 
-        # df['pace'] = pd.to_datetime(df['pace'], unit='m')
-        # df['pace_format'] = df['pace'].dt.strftime('%M:%S')
+        df['pace_format'] = pd.to_datetime(
+            df['pace'], unit='m'
+            ).dt.strftime('%M:%S')
 
         with st.expander(f'Übersicht', expanded=True):
             act_ave = len(df.index)
             dis_ave = df['distance'].sum()/len(df.index)
-            rt_ave = df['run time'].sum()/len(df.index)
+            rt_ave = df['run time'].mean()
+            rt_ave = datetime.fromtimestamp(rt_ave*60).strftime('%M:%S')
             pac_ave = df['pace'].sum()/len(df.index)
+            pac_ave = datetime.fromtimestamp(pac_ave*60).strftime('%M:%S')
             spe_ave = df['speed'].sum()/len(df.index)
 
             col1, col2 = st.columns(2)
@@ -75,8 +78,8 @@ if app == 'Laufanalyse':
 
             col2, col3, col4, col5 = st.columns(4)
             col2.metric('Durchschnittliche Distanz', f'🛣️ {dis_ave:.2f} km')
-            col3.metric('Durchschnittliche Laufzeit', f'⏱️ {rt_ave:.2f} min')
-            col4.metric('Durchschnittliches Tempo', f'🔥 {pac_ave:.2f} min/km')
+            col3.metric('Durchschnittliche Laufzeit', f'⏱️ {rt_ave} min')
+            col4.metric('Durchschnittliches Tempo', f'🔥 {pac_ave} min/km')
             col5.metric(
                 'Durchschnittliche Geschwindigkeit', f'🚀 {spe_ave:.2f} km/h'
                 )
@@ -147,6 +150,7 @@ if app == 'Laufanalyse':
                     st.pyplot(fig2b)
 
             # Plots für Tempi
+            df['pace'] = pd.to_datetime(df['pace'], unit='m')
             with tab3:
                 col1, col2 = st.columns(2)
                 with col1:
@@ -157,7 +161,7 @@ if app == 'Laufanalyse':
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'pace'])
                     ax.set_xlabel('Datum')
-                    ax.set_ylabel('$min/km')
+                    ax.set_ylabel('min/km')
                     ax.grid(linestyle='--')
                     st.pyplot(fig3s)
 
@@ -208,7 +212,7 @@ if app == 'Laufanalyse':
                 '⏱️ Längster Lauf', f'{df["run time"].max():.2f} min'
                 )
             col1.metric(
-                '🔥 Schnellstes ⌀ Tempo', f'{df["pace"].min():.2} min/km'
+                '🔥 Schnellstes ⌀ Tempo', f'{df["pace_format"].min()} min/km'
                 )
 
             df_rec_3 = (
@@ -233,17 +237,17 @@ if app == 'Laufanalyse':
             col2.metric(
                 '⚡ Schnellste 3 km',
                 f'{float(df_rec_3["run time"]):.2f} min - '
-                + f'{float(df_rec_3["pace"]):.2f} min/km'
+                + f'{df_rec_3.loc[df_rec_3.index[0], "pace_format"]} min/km'
                 )
             col2.metric(
                 '🌪️ Schnellste 5 km',
                 f'{float(df_rec_5["run time"]):.2f} min - '
-                + f'{float(df_rec_5["pace"]):.2f} min/km'
+                + f'{df_rec_5.loc[df_rec_5.index[0], "pace_format"]} min/km'
                 )
             col2.metric(
                 '💥 Schnellste 10 km',
                 f'{float(df_rec_10["run time"]):.2f} min - '
-                + f'{float(df_rec_10["pace"]):.2f} min/km'
+                + f'{df_rec_10.loc[df_rec_10.index[0], "pace_format"]} min/km'
                 )
 
             df_rec_hm = (
@@ -262,13 +266,14 @@ if app == 'Laufanalyse':
             col3.metric(
                 '🥇 Schnellster Halbmarathon',
                 f'{float(df_rec_hm["run time"]):.2f} min - '
-                + f'{float(df_rec_hm["pace"]):.2f} min/km'
+                + f'{df_rec_hm.loc[df_rec_hm.index[0], "pace_format"]} min/km'
                 )
-            # col3.metric(
-            #     '🏆 Schnellster Marathon',
-            #     f'{float(df_rec_m["run time"]):.2f} min - '
-            #     + f'{float(df_rec_m["pace"]):.2f} min/km'
-            #     )
+            if 42.195 in df['distance']:
+                col3.metric(
+                    '🏆 Schnellster Marathon',
+                    f'{float(df_rec_m["run time"]):.2f} min - '
+                    + f'{df_rec_m.loc[df_rec_m.index[0], "pace_format"]} min/km'
+                    )
 
     with st.expander(f'Laufzeitenrechner', expanded=False):
         st.write('Gebe deine Laufdaten ein:')
