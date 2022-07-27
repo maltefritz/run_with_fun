@@ -66,22 +66,22 @@ if app == 'Laufanalyse':
 
         with st.expander(f'Übersicht', expanded=True):
             act_ave = len(df.index)
-            dis_ave = df['distance'].sum()/len(df.index)
+            dis_ave = df['distance'].mean()
             rt_ave = df['run time'].mean()
             rt_ave = datetime.fromtimestamp(rt_ave*60).strftime('%M:%S')
-            pac_ave = df['pace'].sum()/len(df.index)
+            pac_ave = df['pace'].mean()
             pac_ave = datetime.fromtimestamp(pac_ave*60).strftime('%M:%S')
-            spe_ave = df['speed'].sum()/len(df.index)
+            spe_ave = df['speed'].mean()
 
             col1, col2 = st.columns(2)
             col1.metric('Anzahl Aktivitäten', f'🏃🏻 {act_ave}')
 
             col2, col3, col4, col5 = st.columns(4)
-            col2.metric('Durchschnittliche Distanz', f'🛣️ {dis_ave:.2f} km')
-            col3.metric('Durchschnittliche Laufzeit', f'⏱️ {rt_ave} min')
-            col4.metric('Durchschnittliches Tempo', f'🔥 {pac_ave} min/km')
+            col2.metric('⌀ Distanz', f'🛣️ {dis_ave:.2f} km')
+            col3.metric('⌀ Laufzeit', f'⏱️ {rt_ave} min')
+            col4.metric('⌀ Tempo', f'🔥 {pac_ave} min/km')
             col5.metric(
-                'Durchschnittliche Geschwindigkeit', f'🚀 {spe_ave:.2f} km/h'
+                '⌀ Geschwindigkeit', f'🚀 {spe_ave:.2f} km/h'
                 )
 
         with st.expander(f'Zeitraum filtern', expanded=True):
@@ -108,6 +108,7 @@ if app == 'Laufanalyse':
                     ax.plot(df.loc[period[0]:period[-1], 'distance'].cumsum())
                     ax.set_xlabel('Datum')
                     ax.set_ylabel('kummlierte km')
+                    ax.set_ylim(0)
                     ax.grid(linestyle='--')
                     st.pyplot(fig1s)
 
@@ -134,7 +135,8 @@ if app == 'Laufanalyse':
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'run time'].cumsum())
                     ax.set_xlabel('Datum')
-                    ax.set_ylabel('kummlierte Stunden')
+                    ax.set_ylabel('kummlierte Minuten')
+                    ax.set_ylim(0)
                     ax.grid(linestyle='--')
                     st.pyplot(fig2s)
 
@@ -145,7 +147,7 @@ if app == 'Laufanalyse':
                         width=0.5
                         )
                     ax.set_xlabel('Datum')
-                    ax.set_ylabel('Stunden')
+                    ax.set_ylabel('Minuten')
                     ax.grid(linestyle='--')
                     st.pyplot(fig2b)
 
@@ -165,6 +167,7 @@ if app == 'Laufanalyse':
                     ax.grid(linestyle='--')
                     st.pyplot(fig3s)
 
+                df['pace'] = pd.to_datetime(df['pace'], unit='m')
                 with col2:
                     fig3b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
@@ -202,6 +205,10 @@ if app == 'Laufanalyse':
                     ax.grid(linestyle='--')
                     st.pyplot(fig4b)
 
+        df['run time'] = pd.to_datetime(
+            df['run time'], unit='m'
+            ).dt.strftime('%H:%M:%S')
+
         with st.expander(f'Rekorde', expanded=True):
             col1, col2, col3 = st.columns(3)
 
@@ -209,7 +216,7 @@ if app == 'Laufanalyse':
                 '🛣️ Weitester Lauf', f'{df["distance"].max():.2f} km'
                 )
             col1.metric(
-                '⏱️ Längster Lauf', f'{df["run time"].max():.2f} min'
+                '⏱️ Längster Lauf', f'{df["run time"].max():} h'
                 )
             col1.metric(
                 '🔥 Schnellstes ⌀ Tempo', f'{df["pace_format"].min()} min/km'
@@ -234,21 +241,24 @@ if app == 'Laufanalyse':
                     ]
                 )
 
-            col2.metric(
-                '⚡ Schnellste 3 km',
-                f'{float(df_rec_3["run time"]):.2f} min - '
-                + f'{df_rec_3.loc[df_rec_3.index[0], "pace_format"]} min/km'
-                )
-            col2.metric(
-                '🌪️ Schnellste 5 km',
-                f'{float(df_rec_5["run time"]):.2f} min - '
-                + f'{df_rec_5.loc[df_rec_5.index[0], "pace_format"]} min/km'
-                )
-            col2.metric(
-                '💥 Schnellste 10 km',
-                f'{float(df_rec_10["run time"]):.2f} min - '
-                + f'{df_rec_10.loc[df_rec_10.index[0], "pace_format"]} min/km'
-                )
+            if 3 in df['distance']:
+                col2.metric(
+                    '⚡ Schnellste 3 km',
+                    f'{df_rec_3.loc[df_rec_3.index[0], "run time"]} h - '
+                    + f'{df_rec_3.loc[df_rec_3.index[0], "pace_format"]} min/km'
+                    )
+            if 5 in df['distance']:
+                col2.metric(
+                    '🌪️ Schnellste 5 km',
+                    f'{df_rec_5.loc[df_rec_5.index[0], "run time"]} h - '
+                    + f'{df_rec_5.loc[df_rec_5.index[0], "pace_format"]} min/km'
+                    )
+            if 10 in df['distance']:
+                col2.metric(
+                    '💥 Schnellste 10 km',
+                    f'{df_rec_10.loc[df_rec_10.index[0], "run time"]}  - '
+                    + f'{df_rec_10.loc[df_rec_10.index[0], "pace_format"]} min/km'
+                    )
 
             df_rec_hm = (
                 df[df['distance'] == 21.0975][
@@ -263,16 +273,18 @@ if app == 'Laufanalyse':
                     ]
                 )
 
-            col3.metric(
-                '🥇 Schnellster Halbmarathon',
-                f'{float(df_rec_hm["run time"]):.2f} min - '
-                + f'{df_rec_hm.loc[df_rec_hm.index[0], "pace_format"]} min/km'
-                )
+            if 21.0975 in df['distance']:
+                col3.metric(
+                    '🥇 Schnellster Halbmarathon',
+                    f'{df_rec_hm.loc[df_rec_hm.index[0], "run time"]} h - '
+                    + f'{df_rec_hm.loc[df_rec_hm.index[0], "pace_format"]} min/km'
+                    )
             if 42.195 in df['distance']:
                 col3.metric(
                     '🏆 Schnellster Marathon',
-                    f'{float(df_rec_m["run time"]):.2f} min - '
-                    + f'{df_rec_m.loc[df_rec_m.index[0], "pace_format"]} min/km'
+                    f'{df_rec_m.loc[df_rec_m.index[0], "run time"]} h - '
+                    + f'{df_rec_m.loc[df_rec_m.index[0], "pace_format"]} '
+                    + f'min/km'
                     )
 
     with st.expander(f'Laufzeitenrechner', expanded=False):
