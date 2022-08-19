@@ -15,6 +15,28 @@ def get_data(file=''):
         )
 
 
+def get_record(df, dis_rec):
+    """
+    Filters the record of a specified distance.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Contains the input data including all run data to be analyzed.
+
+    dis_rec : int/float
+        Indicates the filtering distance of the record.
+
+    Returns
+    -------
+    record: pandas.DataFrame
+        Contains one row of the given input dataframe.
+    """
+    record = df[df['distance'] == dis_rec][df[df['distance'] == dis_rec][
+        'speed'] == df[df['distance'] == dis_rec]['speed'].max()]
+    return record
+
+
 # %% Initialisation
 with open('src\\exercises.json', 'r') as file:
     exercises = json.load(file)
@@ -68,7 +90,7 @@ if app == 'Laufanalyse':
             act_ave = len(df.index)
             dis_ave = df['distance'].mean()
             rt_ave = df['run time'].mean()
-            rt_ave = datetime.fromtimestamp(rt_ave*60).strftime('%M:%S')
+            rt_ave = datetime.fromtimestamp(rt_ave).strftime('%M:%S')
             pac_ave = df['pace'].mean()
             pac_ave = datetime.fromtimestamp(pac_ave*60).strftime('%M:%S')
             spe_ave = df['speed'].mean()
@@ -91,6 +113,8 @@ if app == 'Laufanalyse':
                 min_value=df.index[0], max_value=df.index[-1]
                 )
 
+        df['run time'] = df['run time'] / 60
+
         with st.expander(f'Statistik', expanded=True):
             tab1, tab2, tab3, tab4 = st.tabs(
                 ['Distanz', 'Laufzeit', 'Tempo', 'Geschwindigkeit']
@@ -101,9 +125,9 @@ if app == 'Laufanalyse':
                 with col1:
                     fig1s, ax = plt.subplots(figsize=(16, 9))
                     ax.scatter(
-                        df.index,
+                        df.loc[period[0]:period[-1], :].index,
                         df.loc[period[0]:period[-1], 'distance'].cumsum(),
-                        linewidths=10
+                        linewidth=10
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'distance'].cumsum())
                     ax.set_xlabel('Datum')
@@ -115,8 +139,8 @@ if app == 'Laufanalyse':
                 with col2:
                     fig1b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
-                        df.index, df.loc[period[0]:period[-1], 'distance'],
-                        width=0.5
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'distance'], width=0.5
                         )
                     ax.set_xlabel('Datum')
                     ax.set_ylabel('km')
@@ -129,9 +153,9 @@ if app == 'Laufanalyse':
                 with col1:
                     fig2s, ax = plt.subplots(figsize=(16, 9))
                     ax.scatter(
-                        df.index,
+                        df.loc[period[0]:period[-1], :].index,
                         df.loc[period[0]:period[-1], 'run time'].cumsum(),
-                        linewidths=10
+                        linewidth=10
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'run time'].cumsum())
                     ax.set_xlabel('Datum')
@@ -143,8 +167,8 @@ if app == 'Laufanalyse':
                 with col2:
                     fig2b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
-                        df.index, df.loc[period[0]:period[-1], 'run time'],
-                        width=0.5
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'run time'], width=0.5
                         )
                     ax.set_xlabel('Datum')
                     ax.set_ylabel('Minuten')
@@ -158,8 +182,8 @@ if app == 'Laufanalyse':
                 with col1:
                     fig3s, ax = plt.subplots(figsize=(16, 9))
                     ax.scatter(
-                        df.index,
-                        df.loc[period[0]:period[-1], 'pace'], linewidths=10
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'pace'], linewidth=10
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'pace'])
                     ax.set_xlabel('Datum')
@@ -167,11 +191,11 @@ if app == 'Laufanalyse':
                     ax.grid(linestyle='--')
                     st.pyplot(fig3s)
 
-                df['pace'] = pd.to_datetime(df['pace'], unit='m')
                 with col2:
                     fig3b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
-                        df.index, df.loc[period[0]:period[-1], 'pace'],
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'pace'],
                         width=0.5
                         )
                     ax.set_xlabel('Datum')
@@ -185,8 +209,8 @@ if app == 'Laufanalyse':
                 with col1:
                     fig4s, ax = plt.subplots(figsize=(16, 9))
                     ax.scatter(
-                        df.index,
-                        df.loc[period[0]:period[-1], 'speed'], linewidths=10
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'speed'], linewidth=10
                         )
                     ax.plot(df.loc[period[0]:period[-1], 'speed'])
                     ax.set_xlabel('Datum')
@@ -197,7 +221,8 @@ if app == 'Laufanalyse':
                 with col2:
                     fig4b, ax = plt.subplots(figsize=(16, 9))
                     ax.bar(
-                        df.index, df.loc[period[0]:period[-1], 'speed'],
+                        df.loc[period[0]:period[-1], :].index,
+                        df.loc[period[0]:period[-1], 'speed'],
                         width=0.5
                         )
                     ax.set_xlabel('Datum')
@@ -222,64 +247,39 @@ if app == 'Laufanalyse':
                 '🔥 Schnellstes ⌀ Tempo', f'{df["pace_format"].min()} min/km'
                 )
 
-            df_rec_3 = (
-                df[df['distance'] == 3][
-                    df[df['distance'] == 3]['speed']
-                    == df[df['distance'] == 3]['speed'].max()
-                    ]
-                )
-            df_rec_5 = (
-                df[df['distance'] == 5][
-                    df[df['distance'] == 5]['speed']
-                    == df[df['distance'] == 5]['speed'].max()
-                    ]
-                )
-            df_rec_10 = (
-                df[df['distance'] == 10][
-                    df[df['distance'] == 10]['speed']
-                    == df[df['distance'] == 10]['speed'].max()
-                    ]
-                )
+            df_rec_3 = get_record(df, 3)
+            df_rec_5 = get_record(df, 5)
+            df_rec_10 = get_record(df, 10)
 
-            if 3 in df['distance']:
+            if len(df_rec_3) > 0:
                 col2.metric(
                     '⚡ Schnellste 3 km',
                     f'{df_rec_3.loc[df_rec_3.index[0], "run time"]} h - '
                     + f'{df_rec_3.loc[df_rec_3.index[0], "pace_format"]} min/km'
                     )
-            if 5 in df['distance']:
+            if len(df_rec_5) > 0:
                 col2.metric(
                     '🌪️ Schnellste 5 km',
                     f'{df_rec_5.loc[df_rec_5.index[0], "run time"]} h - '
                     + f'{df_rec_5.loc[df_rec_5.index[0], "pace_format"]} min/km'
                     )
-            if 10 in df['distance']:
+            if len(df_rec_10) > 0:
                 col2.metric(
                     '💥 Schnellste 10 km',
-                    f'{df_rec_10.loc[df_rec_10.index[0], "run time"]}  - '
+                    f'{df_rec_10.loc[df_rec_10.index[0], "run time"]} h - '
                     + f'{df_rec_10.loc[df_rec_10.index[0], "pace_format"]} min/km'
                     )
 
-            df_rec_hm = (
-                df[df['distance'] == 21.0975][
-                    df[df['distance'] == 21.0975]['speed']
-                    == df[df['distance'] == 21.0975]['speed'].max()
-                    ]
-                )
-            df_rec_m = (
-                df[df['distance'] == 42.195][
-                    df[df['distance'] == 42.195]['speed']
-                    == df[df['distance'] == 42.195]['speed'].max()
-                    ]
-                )
+            df_rec_hm = get_record(df, 21.0975)
+            df_rec_m = get_record(df, 42.195)
 
-            if 21.0975 in df['distance']:
+            if len(df_rec_hm) > 0:
                 col3.metric(
                     '🥇 Schnellster Halbmarathon',
                     f'{df_rec_hm.loc[df_rec_hm.index[0], "run time"]} h - '
                     + f'{df_rec_hm.loc[df_rec_hm.index[0], "pace_format"]} min/km'
                     )
-            if 42.195 in df['distance']:
+            if len(df_rec_m) > 0:
                 col3.metric(
                     '🏆 Schnellster Marathon',
                     f'{df_rec_m.loc[df_rec_m.index[0], "run time"]} h - '
