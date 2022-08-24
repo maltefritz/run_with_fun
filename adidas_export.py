@@ -31,4 +31,4 @@ for session in onlyfiles:
     df.loc[date, 'pace'] = round(data['duration_per_km'] / 60000, 2)
     df.loc[date, 'speed'] = round(data['average_speed'], 2)
 
-df.to_csv('export_adidas_stats.csv', sep=';', index='date')
+df.to_excel('export_adidas_stats.xlsx', index='date')
