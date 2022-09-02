@@ -3,8 +3,8 @@ import json
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-# import matplotlib.dates as dt
-from datetime import datetime  # time, timedelta
+import matplotlib.dates as dt
+from datetime import datetime
 
 
 # @st.cache
@@ -38,8 +38,6 @@ def get_record(df, dis_rec):
 
 
 # %% Initialisation
-with open('src\\exercises.json', 'r') as file:
-    exercises = json.load(file)
 
 st.set_page_config(
     layout='wide',
@@ -56,7 +54,7 @@ with st.sidebar:
 
     app = st.selectbox(
         'Wähle deine Anwendung aus',
-        ['Laufanalyse', 'Fitnessanalyse', 'Fitnessplan']
+        ['Laufanalyse','Fitnessanalyse', 'Fitnessplan', 'Ernährungsanalyse']
         )
 
     if app == 'Fitnessplan':
@@ -341,6 +339,10 @@ if app == 'Laufanalyse':
 # %% Fitnessplan
 elif app == 'Fitnessplan':
     st.title('Erstelle einen Fitnessplan')
+
+    with open('src\\exercises.json', 'r') as file:
+        exercises = json.load(file)
+
     i = 0
     while i < nos:
         with st.expander(f'Trainingseinheit {i+1}', expanded=False):
@@ -367,3 +369,61 @@ elif app == 'Fitnessplan':
         i = i + 1
 
 # Download button hinzufügen
+
+# %% Ernäherungsanalyse
+elif app == 'Ernährungsanalyse':
+
+    user_file = st.file_uploader(
+        'Ernäherungsplan einlesen:',
+        type='xlsx'
+        )
+
+    if user_file is None:
+        st.info('Bitte fügen Sie eine Datei ein.')
+
+    else:
+        df = get_data(user_file)
+
+        period = st.date_input(
+            'Zeitraum auswählen:', value=(df.index[0], df.index[-1]),
+            min_value=df.index[0], max_value=df.index[-1]
+            )
+
+        with st.expander(f'Analyse', expanded=True):
+            tab1, tab2, tab3, tab4 = st.tabs(
+                ['Gewicht', 'Ernäherung', 'Wasser', 'Schlaf']
+                )
+
+        with tab1:
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                line = st.checkbox('Linienplot', value=True)
+            with col2:
+                scatter = st.checkbox('Punktwolke')
+            with col3:
+                trend = st.checkbox('Trendlinie')
+            with col4:
+                aim = st.checkbox('Zielgewicht')
+                if aim:
+                    df['goal'] = st.number_input('Zielgewicht eingeben:')
+
+            fig, ax = plt.subplots(figsize=(16, 9))
+            ax.set_xlabel('Datum')
+            ax.set_ylabel('Gewicht in kg')
+            ax.grid(linestyle='--')
+            if scatter:
+                ax.scatter(
+                    df.loc[period[0]:period[-1], :].index,
+                    df.loc[period[0]:period[-1], 'Gewicht']
+                    )
+            if line:
+                ax.plot(df.loc[period[0]:period[-1], 'Gewicht'])
+            if trend:
+                x = dt.date2num(df.loc[period[0]:period[-1], :].index)
+                y = df.loc[period[0]:period[-1], 'Gewicht']
+                z = np.polyfit(x, y, 1)
+                p = np.poly1d(z)
+                plt.plot(x, p(x), '--')
+            if aim:
+                ax.plot(df.loc[period[0]:period[-1], 'goal'], '--')
+            st.pyplot(fig)
