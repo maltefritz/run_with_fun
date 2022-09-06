@@ -390,8 +390,8 @@ elif app == 'Ernährungsanalyse':
             )
 
         with st.expander(f'Analyse', expanded=True):
-            tab1, tab2, tab3, tab4 = st.tabs(
-                ['Gewicht', 'Ernäherung', 'Wasser', 'Schlaf']
+            tab1, tab2, tab3 = st.tabs(
+                ['Gewicht', 'Ernäherung', 'Wasser & Schlaf']
                 )
 
         with tab1:
@@ -427,3 +427,97 @@ elif app == 'Ernährungsanalyse':
             if aim:
                 ax.plot(df.loc[period[0]:period[-1], 'goal'], '--')
             st.pyplot(fig)
+
+        with tab2:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                f_ist = st.checkbox('Istwerte Fette')
+                f_soll = st.checkbox('Sollwerte Fette')
+                if f_soll:
+                    df['f_aim'] = st.number_input(
+                        'Zielwert Fette eingeben:', value=67
+                        )
+            with col2:
+                kh_ist = st.checkbox('Istwerte Kohlenhydrate')
+                kh_soll = st.checkbox('Sollwerte Kohlenhydrate')
+                if kh_soll:
+                    df['kh_aim'] = st.number_input(
+                        'Zielwert Kohlenhydrate eingeben:', value=225
+                        )
+            with col3:
+                p_ist = st.checkbox('Istwerte Proteine')
+                p_soll = st.checkbox('Sollweret Proteine')
+                if p_soll:
+                    df['p_aim'] = st.number_input(
+                        'Zielwert Proteine eingeben:', value=125
+                        )
+
+            fig, ax = plt.subplots(figsize=(16, 9))
+            ax.set_xlabel('Datum')
+            ax.set_ylabel('Nährstoffe in g')
+            ax.grid(linestyle='--')
+            if f_ist:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'Fette'],
+                    label='Istwert Fette'
+                    )
+            if f_soll:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'f_aim'], '--',
+                    label='Sollwert Fette'
+                    )
+            if kh_ist:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'Kohlenhydrate'],
+                    label='Istwert Kohlenhydrate'
+                    )
+            if kh_soll:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'kh_aim'], '--',
+                    label='Sollwert Kohlenhydrate'
+                    )
+            if p_ist:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'Proteine'],
+                    label='Istwert Proteine'
+                    )
+            if p_soll:
+                ax.plot(
+                    df.loc[period[0]:period[-1], 'p_aim'], '--',
+                    label='Sollwert Kohlenhydrate'
+                    )
+            ax.legend(
+                loc='upper center', bbox_to_anchor=(0.5, -0.07),
+                fancybox=True, shadow=True, ncol=6
+                )
+            st.pyplot(fig)
+
+        with tab3:
+            col1, col2 = st.columns(2)
+
+            with col1:
+                fig_w, ax = plt.subplots(figsize=(16, 9))
+                ax.bar(
+                    df.loc[period[0]:period[-1], :].index,
+                    df.loc[period[0]:period[-1], 'Wasser'], width=0.5
+                    )
+                ax.set_xlabel('Datum')
+                ax.set_ylabel('Volumen in Liter')
+                ax.grid(linestyle='--')
+                st.pyplot(fig_w)
+
+            df['Schlaf'] = df['Schlaf_h'] + df['Schlaf_min'] / 60
+            df['Schlaf'] = pd.to_datetime(
+                df['Schlaf'], unit='h'
+                ).dt.strftime('%H:%M')
+
+            with col2:
+                fig_s, ax = plt.subplots(figsize=(16, 9))
+                ax.bar(
+                    df.loc[period[0]:period[-1], :].index,
+                    df.loc[period[0]:period[-1], 'Schlaf'], width=0.5
+                    )
+                ax.set_xlabel('Datum')
+                ax.set_ylabel('Zeit in Stunden')
+                ax.grid(linestyle='--')
+                st.pyplot(fig_s)
