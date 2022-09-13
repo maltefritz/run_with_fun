@@ -59,10 +59,7 @@ with st.sidebar:
 
     if app == 'Fitnessplan':
         nos = st.number_input(
-            'Wähle die Anzahl der Trainingseinheiten', 0, 7
-            )
-        noe = st.number_input(
-            'Wie viele Übungen hat eine Trainingseinheit', 0, 10
+            'Wähle die Anzahl der Trainingseinheiten', 1, 7
             )
 
 # %% Laufanalyse
@@ -343,31 +340,48 @@ elif app == 'Fitnessplan':
     with open('src\\exercises.json', 'r') as file:
         exercises = json.load(file)
 
-    i = 0
-    while i < nos:
-        with st.expander(f'Trainingseinheit {i+1}', expanded=False):
-            fp['session'] = st.text_input(
+    tabs = st.tabs([f'Trainingseinheit {i+1}' for i in range(nos)])
+
+    for i, tab in enumerate(tabs):
+        with tab:
+            fp[f'Trainingseinheit {i+1}'] = dict()
+            fp[f'Trainingseinheit {i+1}']['name'] = st.text_input(
                 'Name der Trainingseinheit', key=f'name{i}'
                 )
+
+            noe = st.number_input(
+                'Wie viele Übungen hat eine Trainingseinheit', 1,
+                key=f'noe{i}'
+                )
+
             st.write('Wähle deine Übungen aus')
 
-            j = 0
-            while j < noe:
-                muscle = st.selectbox(
-                    'Wähle die Muskelgruppe aus, die du trainieren willst',
-                    set([ex['Muskelgruppe'] for ex in exercises.values()]),
-                    key=f'muscle{i}{j}'
-                    )
+            col1, col2, col3 = st.columns(3)
+            fp[f'Trainingseinheit {i+1}']['exercises'] = dict()
+            for j in range(noe):
+                with col1:
+                    muscle = st.selectbox(
+                        'Wähle die Muskelgruppe aus, die du trainieren willst',
+                        set([ex['Muskelgruppe'] for ex in exercises.values()]),
+                        key=f'muscle{i}{j}'
+                        )
 
-                fp['units'] = st.selectbox(
-                    f'Übung {j+1}',
-                    [ex for ex in exercises if exercises[ex]['Muskelgruppe'] == muscle],
-                    key=f'exercises{i}{j}'
-                    )
-                j = j + 1
+                with col2:
+                    exercise = st.selectbox(
+                        f'Übung {j+1}',
+                        [ex for ex in exercises if exercises[ex]['Muskelgruppe'] == muscle],
+                        key=f'exercises{i}{j}'
+                        )
 
-        i = i + 1
+                with col3:
+                    sets = st.number_input(
+                        'Wie viele Sets willst du trainieren?', 1,
+                        key=f'sets{i}{j}', value=3
+                        )
 
+                fp[f'Trainingseinheit {i+1}']['exercises'][exercise] = sets
+
+    st.write(fp)
 # Download button hinzufügen
 
 # %% Ernäherungsanalyse
@@ -507,9 +521,9 @@ elif app == 'Ernährungsanalyse':
                 st.pyplot(fig_w)
 
             df['Schlaf'] = df['Schlaf_h'] + df['Schlaf_min'] / 60
-            df['Schlaf'] = pd.to_datetime(
-                df['Schlaf'], unit='h'
-                ).dt.strftime('%H:%M')
+            # df['Schlaf'] = pd.to_datetime(
+            #     df['Schlaf'], unit='m'
+            #     ).dt.strftime('%H:%M')
 
             with col2:
                 fig_s, ax = plt.subplots(figsize=(16, 9))
