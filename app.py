@@ -313,11 +313,11 @@ if app == 'Laufanalyse':
         with col6:
             if unit == 'km':
                 speed = dis / (h + minu/60 + sec/3600)
-                st.write(f'Geschwindigkeit:')
+                st.write(f'Geschwindigkeit: ')
                 st.write(f'{speed:.2f} km/h')
             elif unit == 'm':
                 speed = (dis/1000) / (h + minu/60 + sec/3600)
-                st.write(f'Geschwindigkeit:')
+                st.write(f'Geschwindigkeit: ')
                 st.write(f'{speed:.2f} km/h')
 
         # Pace noch entsprechend der richtigen Datetime anpassen
