@@ -516,7 +516,7 @@ elif app == 'Ernährungsanalyse':
                     df.loc[period[0]:period[-1], 'Wasser'], width=0.5
                     )
                 ax.set_xlabel('Datum')
-                ax.set_ylabel('Volumen in Liter')
+                ax.set_ylabel('Volumen in l')
                 ax.grid(linestyle='--')
                 st.pyplot(fig_w)
 
